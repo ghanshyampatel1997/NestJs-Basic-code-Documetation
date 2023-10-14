@@ -1,0 +1,106 @@
+
+It's part of NodeJs. 
+Mostly and recomendedlly uses TYPE script but also can be used Javascript.
+
+npm install @nestjs/common@7.6.17 @nestjs/core@7.6.17 @nestjs/platform-express@7.6.17 reflect-metadata@0.1.13 typescript@4.3.2
+
+atleast it should have 1 module and 1 Controller
+
+Pipe: to validate the input value in request
+auth: to validate the user
+Controller: to map request to perticuler method to process request
+Services: To implement logic and call repository to get data
+repository: Connect with database
+
+module: Combines all above in it as one big app module. Used to initialise complete app.
+
+---------------------------------------------------------------------------------------------------------------
+
+Now going to use nestCLI
+
+npm install -g @nestjs/cli
+
+-----------------------
+To create new project:
+ nest new ProjectName
+
+ remove app.controller.ts, app.controller.spec.ts, app.module.ts, app.services.ts .
+ add your required named project files like messages.controller.ts, messages.module.ts, app.services.ts.
+
+ for that run below command to generate module:
+    nest generate module messages
+
+now to generate controller for it run below command:
+    nest generate controller messages/messages --flat
+
+    here --flat is to stop create any new directory for controller.
+
+@Controller('messages'): Decorator above controller class to define it is controller with Route path messages.
+
+@Get('routePath') : For get request used above method defination as like Route filter.
+                    which is in Controller.
+
+                    @Get('other|te*st') will match
+                        localhost:3000/other
+                        localhost:3000/test
+                        localhost:3000/te123st ......
+
+
+@Post():  For Post request.
+
+@Body(): To get the body of request. used in Method defination.
+@Param('id'): to get the wildcard Parameter from URL, like /:id.
+@Headers(): To Get Header details from Request.
+        import { Controller, Get, Headers } from "@nestjs/common";
+
+        @Controller("health")
+        export class HealthController {
+            @Get()
+            checkHealth(@Headers() headers: Record < string, string > ) {
+                return {
+                test: "This is the test",
+                };
+            }
+        }
+
+@Query(): To get query param from request.
+            IF you want to provide query params /article/findByFilter/bug?google=1&baidu=2, you could use
+            @Get('/article/findByFilter/bug?')
+            async find(@Query('google') google: number, @Query('baidu') baidu: number,){
+
+            }
+Exp:
+        @Controller('messages')
+        export class MessagesController {
+            @Get()
+            listMessages(){
+
+            }
+
+            @Post()
+            createMessages(@Body() body:any){
+                console.log(body);
+            }
+
+            @Get('/:id')
+            getMessage(@Param('id') id:string){
+                console.log(id);
+            }
+        }
+
+Installing Class validator
+    npm install class-validator
+    npm install class-transformer
+
+Validator:-----------------------------
+
+    import { IsString } from "class-validator";
+
+    export class CreateMessageDto{
+        @IsString()
+        content:string;
+    };
+
+
+
+------------------------------------------
